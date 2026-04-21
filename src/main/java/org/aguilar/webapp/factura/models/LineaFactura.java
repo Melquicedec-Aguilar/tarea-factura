@@ -5,15 +5,15 @@ public class LineaFactura {
     private Integer id;
     private Producto producto;
     private Integer cantidad;
-    private Integer precio;
+    private Double precio;
 
     public LineaFactura() {
     }
 
-    public LineaFactura(Producto producto, Integer cantidad) {
+    public LineaFactura(Producto producto, Integer cantidad, Double precio) {
         this.producto = producto;
         this.cantidad = cantidad;
-        this.precio = producto.getPrecio() * cantidad;
+        this.precio = (double) (producto.getPrecio() * cantidad);
     }
 
     public Integer getId() {
@@ -40,11 +40,11 @@ public class LineaFactura {
         this.cantidad = cantidad;
     }
 
-    public Integer getPrecio() {
+    public Double getPrecio() {
         return precio;
     }
 
-    public void setPrecio(Integer precio) {
+    public void setPrecio(Double precio) {
         this.precio = precio;
     }
 }
