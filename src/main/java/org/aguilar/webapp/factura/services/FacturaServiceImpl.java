@@ -6,14 +6,14 @@ import jakarta.transaction.Transactional;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
+import org.aguilar.webapp.factura.configs.Service;
 import org.aguilar.webapp.factura.models.Carro;
 import org.aguilar.webapp.factura.models.Factura;
 import org.aguilar.webapp.factura.models.LineaFactura;
 import org.aguilar.webapp.factura.models.Usuario;
 import org.aguilar.webapp.factura.repositories.Repository;
 
-@Transactional
-@ApplicationScoped
+@Service
 public class FacturaServiceImpl implements FacturaService{
 
     @Inject

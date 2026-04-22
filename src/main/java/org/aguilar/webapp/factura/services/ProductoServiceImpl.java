@@ -1,17 +1,17 @@
 package org.aguilar.webapp.factura.services;
 
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
+import org.aguilar.webapp.factura.configs.ProductoServicePrincipal;
+import org.aguilar.webapp.factura.configs.Service;
 import org.aguilar.webapp.factura.models.Categoria;
 import org.aguilar.webapp.factura.models.Producto;
 import org.aguilar.webapp.factura.repositories.Repository;
 
-@ApplicationScoped
-@Transactional
+@Service
+@ProductoServicePrincipal
 public class ProductoServiceImpl implements ProductoService{
 
     @Inject

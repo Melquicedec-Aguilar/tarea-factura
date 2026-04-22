@@ -1,0 +1,72 @@
+<!--
+  beans.xml
+  ---------
+  Archivo de configuración de CDI (Contexts and Dependency Injection) para la aplicación.
+
+  Propósito:
+  - Indica al contenedor CDI cómo descubrir y gestionar beans en la aplicación.
+  - Puede usarse para declarar alternativas, interceptors, decorators, y otras configuraciones de CDI.
+
+  Nota sobre la versión:
+  - Este archivo usa el namespace de Jakarta EE (Jakarta EE 9+). Asegúrese de que las dependencias del proyecto
+    y el servidor de aplicaciones soporten la versión indicada.
+
+  Explicación de atributos importantes:
+  - bean-discovery-mode="annotated"
+      - Significa que el contenedor descubrirá sólo las clases anotadas con anotaciones de CDI
+        (por ejemplo: @Named, @Inject, @ApplicationScoped, @RequestScoped, @SessionScoped, @Singleton,
+        o cualquier anotación de estereotipo).
+      - Es una opción recomendada para producción porque evita el escaneo de clases no anotadas,
+        reduciendo el coste de arranque y el riesgo de detectar clases no deseadas.
+  - Otras opciones:
+      - "all": el contenedor intentará descubrir y habilitar todas las clases detectadas como beans,
+        incluidas aquellas sin anotaciones (mayor cobertura pero más riesgo/overhead).
+      - "none": desactiva el descubrimiento automático (útil en escenarios avanzados donde todo se configura manualmente).
+
+  Buenas prácticas y sugerencias:
+  - Si necesita habilitar una alternativa, interceptor o decorator en tiempo de despliegue, puede declararlo
+    aquí (ver ejemplos comentados más abajo).
+  - Mantener `bean-discovery-mode="annotated"` y usar anotaciones explícitas en las clases suele ser la opción
+    más clara y mantenible.
+  - Si requiere compatibilidad con versiones anteriores o comportamiento específico del contenedor, consulte
+    la documentación del servidor de aplicaciones (WildFly, Payara, TomEE, GlassFish, etc.).
+
+  Ejemplos (comentados) de secciones que puede añadir si necesita declarar alternativas/interceptors/decorators:
+
+  <!--
+  <beans ...>
+    <!-- Declarar una alternativa concreta (habilitar implementación alternativa de un bean) -->
+    <!--
+    <alternatives>
+        <class>com.example.MyAlternativeImplementation</class>
+    </alternatives>
+    -->
+
+    <!-- Declarar interceptores que deben estar activos -->
+    <!--
+    <interceptors>
+        <class>com.example.LoggingInterceptor</class>
+    </interceptors>
+    -->
+
+    <!-- Declarar decorators -->
+    <!--
+    <decorators>
+        <class>com.example.TimingDecorator</class>
+    </decorators>
+    -->
+  <!--
+  </beans>
+  -->
+
+  Observación final:
+  - Actualmente este archivo está vacío (solo configura discovery mode). Si la aplicación necesita
+    políticas explícitas (alternatives, interceptors, decorators) o requiere modificar el comportamiento
+    de descubrimiento, añada las secciones correspondientes siguiendo el esquema de CDI/Jakarta EE.
+-->
+<beans xmlns="https://jakarta.ee/xml/ns/jakartaee"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/beans_3_0.xsd"
+       version="3.0" bean-discovery-mode="annotated">
+
+</beans>

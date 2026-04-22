@@ -1,8 +1,6 @@
 package org.aguilar.webapp.factura.repositories;
 
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.inject.Named;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,15 +8,43 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import org.aguilar.webapp.factura.configs.Repositorio;
 import org.aguilar.webapp.factura.models.Usuario;
 
-@ApplicationScoped
-@Named
+/**
+ * Implementación JDBC del repositorio de {@link Usuario}.
+ *
+ * <p>Responsabilidad:
+ * - Proveer operaciones CRUD básicas y consultas específicas sobre la tabla "Usuarios"
+ *   usando una conexión JDBC inyectada.</p>
+ *
+ * <p>Notas:
+ * - Esta clase asume que la tabla "Usuarios" tiene columnas: id, username, password, email.
+ * - La conexión {@code conn} se inyecta por CDI; la gestión de la transacción y el ciclo de vida
+ *   de la conexión depende de la configuración del contenedor y de la implementación que
+ *   proporcione la conexión.</p>
+ */
+@Repositorio
 public class UsuarioRepositoryImpl implements UsuarioRepository{
 
+    /**
+     * Conexión JDBC inyectada por CDI.
+     *
+     * <p>Se usa para crear sentencias y ejecutar consultas/actualizaciones.</p>
+     */
     @Inject
     private Connection conn;
 
+    /**
+     * Busca un {@link Usuario} por su nombre de usuario (username).
+     *
+     * <p>Si existe un usuario con el username proporcionado, se construye y devuelve la entidad.
+     * Si no existe, devuelve {@code null}.</p>
+     *
+     * @param username el nombre de usuario a buscar (se espera no nulo)
+     * @return la instancia {@link Usuario} encontrada o {@code null} si no existe
+     * @throws SQLException si ocurre un error durante la consulta JDBC
+     */
     @Override
     public Usuario porUsername(String username) throws SQLException {
         Usuario usuario = null;
@@ -37,6 +63,12 @@ public class UsuarioRepositoryImpl implements UsuarioRepository{
         return usuario;
     }
 
+    /**
+     * Lista todos los usuarios existentes en la tabla "Usuarios".
+     *
+     * @return una lista (posiblemente vacía) con todos los {@link Usuario} encontrados
+     * @throws SQLException si ocurre un error durante la consulta JDBC
+     */
     @Override
     public List<Usuario> listar() throws SQLException {
         List<Usuario> usuarios = new ArrayList<>();
@@ -51,6 +83,13 @@ public class UsuarioRepositoryImpl implements UsuarioRepository{
         return usuarios;
     }
 
+    /**
+     * Busca un {@link Usuario} por su identificador (id).
+     *
+     * @param id identificador del usuario a buscar
+     * @return la instancia {@link Usuario} encontrada, o {@code null} si no existe
+     * @throws SQLException si ocurre un error durante la consulta JDBC
+     */
     @Override
     public Usuario porId(Long id) throws SQLException {
         Usuario usuario = null;
@@ -65,6 +104,22 @@ public class UsuarioRepositoryImpl implements UsuarioRepository{
         return usuario;
     }
 
+    /**
+     * Inserta o actualiza un {@link Usuario} en la base de datos.
+     *
+     * <p>Comportamiento:
+     * - Si {@code usuario.getId() != null && usuario.getId() > 0} se ejecuta un UPDATE.
+     * - En otro caso se ejecuta un INSERT.</p>
+     *
+     * <p>Parámetros del PreparedStatement:
+     * - 1: username
+     * - 2: password
+     * - 3: email
+     * - 4: id (solo para UPDATE)</p>
+     *
+     * @param usuario entidad con los datos a persistir (se espera que los campos username, password y email estén presentes)
+     * @throws SQLException si ocurre un error durante la ejecución JDBC
+     */
     @Override
     public void guardar(Usuario usuario) throws SQLException {
         String sql;
@@ -87,6 +142,12 @@ public class UsuarioRepositoryImpl implements UsuarioRepository{
         }
     }
 
+    /**
+     * Elimina un usuario por su identificador.
+     *
+     * @param id id del usuario a eliminar
+     * @throws SQLException si ocurre un error durante la ejecución JDBC
+     */
     @Override
     public void eliminar(Long id) throws SQLException {
         String sql = "DELETE FROM Usuarios WHERE id=?";
@@ -97,6 +158,17 @@ public class UsuarioRepositoryImpl implements UsuarioRepository{
         }
     }
 
+    /**
+     * Construye un objeto {@link Usuario} a partir de la fila actual del {@link ResultSet}.
+     *
+     * <p>Este método centraliza la lectura de columnas y el mapeo a la entidad. Internamente
+     * captura {@link SQLException} y lo convierte en un {@link RuntimeException} porque es un
+     * helper privado usado dentro de contextos ya controlados por los métodos que lanzan {@link SQLException}.</p>
+     *
+     * @param rs resultado posicionado en la fila a mapear
+     * @return una nueva instancia de {@link Usuario} con los valores leídos del ResultSet
+     * @throws RuntimeException si ocurre un {@link SQLException} durante el mapeo
+     */
     private Usuario getUsuario(ResultSet rs){
         Usuario usuario = new Usuario();
         try {
@@ -105,6 +177,8 @@ public class UsuarioRepositoryImpl implements UsuarioRepository{
             usuario.setPassword(rs.getString("password"));
             usuario.setEmail(rs.getString("email"));
         } catch (SQLException ex) {
+            // Convertimos la excepción comprobada en una excepción de tiempo de ejecución
+            // para simplificar la re-utilización interna; los métodos públicos siguen declarando SQLException.
             throw new RuntimeException(ex);
         }
         return usuario;

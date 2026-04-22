@@ -1,8 +1,6 @@
 package org.aguilar.webapp.factura.repositories;
 
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.inject.Named;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -10,11 +8,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import org.aguilar.webapp.factura.configs.Repositorio;
 import org.aguilar.webapp.factura.models.Factura;
 import org.aguilar.webapp.factura.models.LineaFactura;
 
-@ApplicationScoped
-@Named
+@Repositorio
 public class FacturaRepositoryImpl implements Repository<Factura> {
 
     @Inject
