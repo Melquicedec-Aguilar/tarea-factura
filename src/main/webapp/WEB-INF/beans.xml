@@ -1,6 +1,6 @@
 <!--
   beans.xml
-  ---------
+
   Archivo de configuración de CDI (Contexts and Dependency Injection) para la aplicación.
 
   Propósito:
@@ -33,9 +33,9 @@
 
   Ejemplos (comentados) de secciones que puede añadir si necesita declarar alternativas/interceptors/decorators:
 
-  <!--
+  <!-
   <beans ...>
-    <!-- Declarar una alternativa concreta (habilitar implementación alternativa de un bean) -->
+    <!- Declarar una alternativa concreta (habilitar implementación alternativa de un bean) -->
     <!--
     <alternatives>
         <class>com.example.MyAlternativeImplementation</class>
@@ -59,11 +59,12 @@
   </beans>
   -->
 
-  Observación final:
-  - Actualmente este archivo está vacío (solo configura discovery mode). Si la aplicación necesita
-    políticas explícitas (alternatives, interceptors, decorators) o requiere modificar el comportamiento
-    de descubrimiento, añada las secciones correspondientes siguiendo el esquema de CDI/Jakarta EE.
--->
+    <!--
+    Observación final:
+    - Actualmente este archivo está vacío (solo configura discovery mode). Si la aplicación necesita
+      políticas explícitas (alternatives, interceptors, decorators) o requiere modificar el comportamiento
+      de descubrimiento, añada las secciones correspondientes siguiendo el esquema de CDI/Jakarta EE.
+  -->
 <beans xmlns="https://jakarta.ee/xml/ns/jakartaee"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/beans_3_0.xsd"

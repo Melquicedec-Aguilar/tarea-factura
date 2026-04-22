@@ -13,12 +13,34 @@ import org.aguilar.webapp.factura.configs.Repositorio;
 import org.aguilar.webapp.factura.models.Categoria;
 import org.aguilar.webapp.factura.models.Producto;
 
+/**
+ * Implementación de {@link Repository} para la entidad {@link Producto}.
+ *
+ * <p>Proporciona operaciones CRUD usando JDBC sobre la tabla `productos` y realiza
+ * el mapeo manual de resultados SQL a instancias de {@link Producto} y {@link Categoria}.</p>
+ *
+ * <p>Se espera que la conexión JDBC sea inyectada (por ejemplo, a través de CDI) en
+ * el campo {@link #conn}.</p>
+ */
 @Repositorio
 public class ProductoRepositoryImpl implements Repository<Producto> {
 
+    /**
+     * Conexión JDBC inyectada que se utiliza para todas las operaciones de persistencia.
+     * <p>No debe cerrarse aquí; el lifecycle lo gestiona el contenedor/inyección.</p>
+     */
     @Inject
     private Connection conn;
 
+    /**
+     * Recupera todos los productos disponibles en la base de datos.
+     *
+     * <p>Realiza un {@code INNER JOIN} con la tabla {@code categorias} para incluir el nombre
+     * de la categoría asociada a cada producto. El resultado se ordena por {@code p.id ASC}.</p>
+     *
+     * @return lista de productos (vacía si no hay resultados)
+     * @throws SQLException si ocurre un error en la consulta
+     */
     @Override
     public List<Producto> listar() throws SQLException {
         List<Producto> productos = new ArrayList<>();
@@ -34,6 +56,15 @@ public class ProductoRepositoryImpl implements Repository<Producto> {
         return productos;
     }
 
+    /**
+     * Busca y devuelve un producto por su identificador.
+     *
+     * <p>Si no existe un producto con el id proporcionado retorna {@code null}.</p>
+     *
+     * @param id identificador del producto a buscar
+     * @return instancia de {@link Producto} o {@code null} si no se encuentra
+     * @throws SQLException si ocurre un error en la consulta
+     */
     @Override
     public Producto porId(Long id) throws SQLException {
         Producto producto = null;
@@ -53,6 +84,15 @@ public class ProductoRepositoryImpl implements Repository<Producto> {
         return producto;
     }
 
+    /**
+     * Inserta o actualiza un producto en la base de datos.
+     *
+     * <p>Si {@code producto.getId()} es distinto de {@code null} y mayor que 0 se realiza
+     * un {@code UPDATE}, en caso contrario un {@code INSERT} incluyendo {@code fecha_registro}.</p>
+     *
+     * @param producto producto a guardar o actualizar
+     * @throws SQLException si ocurre un error en la operación de escritura
+     */
     @Override
     public void guardar(Producto producto) throws SQLException {
         String sql;
@@ -79,6 +119,12 @@ public class ProductoRepositoryImpl implements Repository<Producto> {
         }
     }
 
+    /**
+     * Elimina un producto identificado por {@code id}.
+     *
+     * @param id identificador del producto a eliminar
+     * @throws SQLException si ocurre un error en la operación de borrado
+     */
     @Override
     public void eliminar(Long id) throws SQLException {
         String sql = "DELETE FROM productos WHERE id=?";
@@ -89,6 +135,17 @@ public class ProductoRepositoryImpl implements Repository<Producto> {
         }
     }
 
+    /**
+     * Mapea la fila actual del {@link ResultSet} a una instancia de {@link Producto}.
+     *
+     * <p>Se asume que el {@code ResultSet} contiene las columnas:
+     * {@code id, nombre, sku, precio, fecha_registro, categoria_id} y una columna aliased {@code categoria}
+     * con el nombre de la categoría.</p>
+     *
+     * @param rs conjunto de resultados posicionado en la fila a mapear
+     * @return instancia de {@link Producto} poblada con los datos del {@code ResultSet}
+     * @throws SQLException si ocurre un error al leer los campos del resultado
+     */
     private Producto getProducto(ResultSet rs) throws SQLException {
         Producto producto = new Producto();
         Categoria categoria = new Categoria();
