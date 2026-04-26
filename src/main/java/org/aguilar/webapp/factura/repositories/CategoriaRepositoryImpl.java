@@ -24,10 +24,10 @@ public class CategoriaRepositoryImpl implements Repository<Categoria> {
         try (Statement stmt = conn.createStatement();
         var rs = stmt.executeQuery("SELECT * FROM categorias")){
             while (rs.next()){
-
+                categoria.add(getCategoria(rs));
             }
         }
-        return List.of();
+        return categoria;
     }
 
     @Override
