@@ -14,6 +14,9 @@
             <div class="col-sm-4">
                 <input type="text" name="nombre" id="nombre" value="${producto.nombre}" class="form-control">
             </div>
+            <c:if test="${errores != null && errores.containsKey('nombre')}">
+                <div style="color:red">${errores.nombre}</div>
+            </c:if>
         </div>
 
         <div class="row mb-2">
@@ -21,6 +24,9 @@
             <div class="col-sm-4">
                 <input type="number" name="precio" id="precio" value="${producto.precio}" class="form-control">
             </div>
+            <c:if test="${errores != null && !empty errores.precio}">
+                <div style="color:red">${errores.precio}</div>
+            </c:if>
         </div>
 
         <div class="row mb-2">
@@ -28,6 +34,9 @@
             <div class="col-sm-4">
                 <input type="text" name="sku" id="sku" value="${producto.sku}" class="form-control">
             </div>
+            <c:if test="${errores !null && errores.containsKey('sku')}">
+                <div style="color:red">${errores.sku}</div>
+            </c:if>
         </div>
 
         <div class="row mb-2">
@@ -35,6 +44,9 @@
             <div class="col-sm-4">
                 <input type="text" name="fecha_registro" id="fecha_registro" value="${producto.fechaRegistro}" class="form-control">
             </div>
+            <c:if test="${errores != null && errores.containsKey('fecha_registro')}">
+                <div style="color:red">${errores.fecha_registro}</div>
+            </c:if>
         </div>
 
         <div class="row mb-2">
@@ -48,6 +60,9 @@
                     </c:forEach>
                 </select>
             </div>
+            <c:if test="${errores != null && errores.constainsKey('categoria')}">
+                <div style="color:red">${errores.categoria}</div>
+            </c:if>
         </div>
 
         <div class="row mb-2">
