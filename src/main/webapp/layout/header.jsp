@@ -29,12 +29,13 @@
             ${not empty sessionScope.username ? sessionScope.username : "Cuenta"}
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-             <li>
-             <a class="dropdown-item"
-             href="${pageContext.request.contextPath}/${not empty sessionScope.username ? "logout" : "login"}">
-             ${not empty sessionScope.username ? "Logout" : "Login"}
-             </a>
-             </li>
+            <c:if test="${empty sessionScope.username}">
+                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/login">Login</a></li>
+                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/usuarios/form">Crear cuenta</a></li>
+            </c:if>
+            <c:if test="${not empty sessionScope.username or sessionScope.username eq 'null'}">
+                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/logout">Logout</a></li>
+            </c:if>
           </ul>
         </li>
 

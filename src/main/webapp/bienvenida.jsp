@@ -38,7 +38,7 @@
 <jsp:include page="layout/header.jsp"/>
 
 <div class="container mt-4">
-    <h2>¡Bienvenido, ${username}!</h2>
+    <h2>¡Bienvenid@, ${username}!</h2>
     <p>Has iniciado sesión correctamente.</p>
 
     <%--

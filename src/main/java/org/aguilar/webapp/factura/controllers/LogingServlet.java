@@ -72,6 +72,10 @@ public class LogingServlet extends HttpServlet {
             req.setAttribute("title", "Login");
             getServletContext().getRequestDispatcher("/login.jsp").forward(req, resp);
         }
+
+        HttpSession session = req.getSession();
+
+        System.out.println("Valor en sesión: '" + session.getAttribute("username") + "'");
     }
 
     /**
@@ -108,7 +112,9 @@ public class LogingServlet extends HttpServlet {
 
             resp.sendRedirect(req.getContextPath() + "/login");
         }else {
+            req.getSession().removeAttribute("username");
             resp.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Lo sentimos no esta autorizado para ingresar a esta página");
         }
+
     }
 }
