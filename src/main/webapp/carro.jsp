@@ -48,12 +48,14 @@
 
 </c:otherwise>
 </c:choose>
+</form>
 
 <div class="mt-3">
 <a class="btn btn-secondary" href="${pageContext.request.contextPath}/index.jsp">Volver</a>
 <a class="btn btn-success" href="${pageContext.request.contextPath}/productos">Seguir comprando</a>
-</div>
-
+<form action="${pageContext.request.contextPath}/factura" method="post">
+    <button type="submit">Generar Factura</button>
 </form>
+</div>
 
 <jsp:include page="layout/footer.jsp"/>

@@ -106,12 +106,15 @@ public class LogingServlet extends HttpServlet {
         Optional<Usuario> usernameOptional = service.login(username, password);
 
         if (usernameOptional.isPresent()){
+            Usuario usuario = usernameOptional.get();
 
             HttpSession session = req.getSession();
-            session.setAttribute("username", username);
+            session.setAttribute("usuario", usuario);
+            session.setAttribute("username", usuario.getUsername());
 
             resp.sendRedirect(req.getContextPath() + "/login");
         }else {
+            req.getSession().removeAttribute("usuario");
             req.getSession().removeAttribute("username");
             resp.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Lo sentimos no esta autorizado para ingresar a esta página");
         }

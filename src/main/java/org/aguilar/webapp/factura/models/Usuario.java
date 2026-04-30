@@ -75,8 +75,9 @@ public class Usuario implements Serializable {
      */
     @PostConstruct
     public void init(){
-
-        log.info(" ---------- Bean Usuario listo para Login ");
+        this.username = "";
+        this.email = "";
+        log.info(" ---------- Bean Usuario listo para su uso");
     }
 
     /**

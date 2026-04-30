@@ -14,13 +14,14 @@ import org.aguilar.webapp.factura.models.Producto;
 import org.aguilar.webapp.factura.services.ProductoService;
 
 @WebServlet("/agregar-carro")
-public class AgregarCarro extends HttpServlet {
+public class AgregarCarroServlet extends HttpServlet {
 
     @Inject
     private ProductoService service;
 
     @Inject
     private Carro carro;
+
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

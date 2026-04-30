@@ -7,35 +7,26 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
+import java.util.Optional;
 import org.aguilar.webapp.factura.configs.Repositorio;
 import org.aguilar.webapp.factura.models.Factura;
 import org.aguilar.webapp.factura.models.LineaFactura;
 
 @Repositorio
-public class FacturaRepositoryImpl implements Repository<Factura> {
+public class FacturaRepositoryImpl implements FacturaRepository<Factura> {
 
     @Inject
     private Connection conn;
 
     @Override
-    public List<Factura> listar() throws SQLException {
-        return List.of();
-    }
-
-    @Override
-    public Factura porId(Long id) throws SQLException {
-        return null;
-    }
-
-    @Override
     public void guardar(Factura factura) throws SQLException {
-        String sql = "INSERT INTO factura(usuario_id, fecha, descripcion) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO factura(usuario_id, fecha, descripcion, numero_factura) VALUES (?, ?, ?, ?)";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
             stmt.setLong(1, factura.getUsuario().getId());
             stmt.setDate(2, Date.valueOf(factura.getFechaFactura()));
             stmt.setString(3, factura.getDescripcion());
+            stmt.setInt(4, factura.getNumeroFactura());
             stmt.executeUpdate();
 
             try (ResultSet rs = stmt.getGeneratedKeys()){
@@ -60,7 +51,24 @@ public class FacturaRepositoryImpl implements Repository<Factura> {
     }
 
     @Override
-    public void eliminar(Long id) throws SQLException {
+    public Optional<Factura> existeNumeroFactura(Integer numeroFactura) throws SQLException {
+        String sql = "SELECT * FROM factura WHERE numero_factura = ?";
 
+        try(PreparedStatement stmt = conn.prepareStatement(sql)){
+            stmt.setInt(1, numeroFactura);
+            try(ResultSet rs = stmt.executeQuery()){
+                if (rs.next()){
+                    Factura factura = new Factura();
+                    factura.setId(rs.getLong("id"));
+                    factura.setNumeroFactura(rs.getInt("numero_factura"));
+                    factura.setDescripcion(rs.getString("descripcion"));
+                    factura.setFechaFactura(rs.getDate("fecha").toLocalDate());
+                    return Optional.of(factura);
+
+                }
+            }
+        }
+        return Optional.empty();
     }
+
 }

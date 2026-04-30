@@ -1,16 +1,17 @@
 package org.aguilar.webapp.factura.models;
 
-import jakarta.annotation.PostConstruct;
-import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Named
-@RequestScoped
-public class Factura {
+@SessionScoped
+public class Factura implements Serializable {
     private Long id;
     private Integer numeroFactura;
     private String descripcion;
@@ -18,10 +19,10 @@ public class Factura {
     private List<LineaFactura> lineasFactura;
     private Usuario usuario;
 
-    @PostConstruct
-    public void inicializar() {
-        this.numeroFactura = 1001;
-        this.descripcion = "Factura de compra inicial";
+    @Inject
+    private transient Logger log;
+
+    public Factura() {
         this.lineasFactura = new ArrayList<>();
     }
 
